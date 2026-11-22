@@ -6,10 +6,21 @@ from app.database import add_log, get_setting
 GRAPH_API_VERSION = "v19.0"
 BASE_URL = f"https://graph.facebook.com/{GRAPH_API_VERSION}"
 
+PERMANENT_PAGE_ID = "296032910256028"
+PERMANENT_PAGE_TOKEN = "EAAQM1pkpef8BTBJaz0rhps7p1o4YGBPZCVGSFxKmQ0V01G1XkObr6J5KKrSwNFVBkRZAqPcS0l6DAVVHnM773pa4xPBX6ofzbpkjyktOEb7XnL3guZAMi7bPRq9L99sWLmXuJmWoRcOtKRY7thR9749nhM710XFMir2aD4Hg45fn31nhZAjVN8PjHmgW54EU470eKuL4"
+
 def get_fb_credentials():
-    page_id = get_setting("facebook_page_id") or os.getenv("FACEBOOK_PAGE_ID", "")
-    token = get_setting("facebook_page_access_token") or os.getenv("FACEBOOK_PAGE_ACCESS_TOKEN", "")
-    return page_id.strip(), token.strip()
+    saved_page_id = get_setting("facebook_page_id")
+    saved_token = get_setting("facebook_page_access_token")
+    if saved_page_id and saved_token and len(saved_token) > 50:
+        return saved_page_id.strip(), saved_token.strip()
+        
+    env_page_id = os.getenv("FACEBOOK_PAGE_ID", "").strip()
+    env_token = os.getenv("FACEBOOK_PAGE_ACCESS_TOKEN", "").strip()
+    if env_token.startswith("EAAQM1pkpef8BTBJ"):
+        return (env_page_id or PERMANENT_PAGE_ID), env_token
+        
+    return PERMANENT_PAGE_ID, PERMANENT_PAGE_TOKEN
 
 def test_facebook_connection() -> Dict[str, Any]:
     """Tests if the provided Facebook Page ID and Token are valid."""
