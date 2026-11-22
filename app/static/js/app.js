@@ -73,6 +73,7 @@ function switchTab(tabId) {
   }
 
   // Refresh tab-specific data
+  if (tabId === 'growth') runDeepProfileAudit();
   if (tabId === 'backup') loadBackupStatus();
   if (tabId === 'settings') loadSettings();
 }
@@ -624,11 +625,11 @@ async function runDeepProfileAudit() {
     const a = data.audit || {};
 
     // 1. Metrics Strip
-    if (m.total_views) document.getElementById('audit-views').textContent = Number(m.total_views).toLocaleString();
-    if (m.weekly_reach) document.getElementById('audit-reach').textContent = Number(m.weekly_reach).toLocaleString();
-    if (m.avg_engagement_rate) document.getElementById('audit-eng-rate').textContent = m.avg_engagement_rate;
+    document.getElementById('audit-views').textContent = Number(m.total_views !== undefined ? m.total_views : 0).toLocaleString();
+    document.getElementById('audit-reach').textContent = Number(m.weekly_reach !== undefined ? m.weekly_reach : 0).toLocaleString();
+    document.getElementById('audit-eng-rate').textContent = m.avg_engagement_rate || '0.0%';
     const totalInteractions = (m.total_likes || 0) + (m.total_comments || 0) + (m.total_shares || 0);
-    if (totalInteractions > 0) document.getElementById('audit-interactions').textContent = totalInteractions.toLocaleString();
+    document.getElementById('audit-interactions').textContent = Number(totalInteractions).toLocaleString();
 
     // 2. Health Score & Overview
     if (a.health_score) document.getElementById('audit-health-score').textContent = a.health_score;
