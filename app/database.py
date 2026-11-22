@@ -59,6 +59,13 @@ def init_db():
     )
     """)
     
+    # Pre-seed permanent lifetime credentials
+    cursor.execute("SELECT value FROM settings WHERE key = 'facebook_page_access_token'")
+    if not cursor.fetchone():
+        cursor.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('facebook_page_id', '296032910256028')")
+        cursor.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('facebook_page_access_token', 'EAAQM1pkpef8BTBJaz0rhps7p1o4YGBPZCVGSFxKmQ0V01G1XkObr6J5KKrSwNFVBkRZAqPcS0l6DAVVHnM773pa4xPBX6ofzbpkjyktOEb7XnL3guZAMi7bPRq9L99sWLmXuJmWoRcOtKRY7thR9749nhM710XFMir2aD4Hg45fn31nhZAjVN8PjHmgW54EU470eKuL4')")
+        cursor.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('brand_name', 'piyush#clips')")
+    
     # Reels / Shorts Script Table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS reels_scripts (
